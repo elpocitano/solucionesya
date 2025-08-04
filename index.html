@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soluciones Ya!</title>
+    <!-- Incluye Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fuente Inter de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fafc;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark-mode {
+            background-color: #1a202c;
+            color: #e2e8f0;
+        }
+
+        /* Estilo para el modo oscuro */
+        .dark-mode .bg-white {
+            background-color: #2d3748;
+        }
+        .dark-mode .text-gray-800 {
+            color: #e2e8f0;
+        }
+        .dark-mode .text-gray-500 {
+            color: #a0aec0;
+        }
+        .dark-mode .text-gray-700 {
+            color: #cbd5e0;
+        }
+        .dark-mode .border-gray-200 {
+            border-color: #4a5568;
+        }
+        .dark-mode .shadow-lg {
+            --tw-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.25);
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+        }
+        .dark-mode .bg-gray-100 {
+            background-color: #2d3748;
+        }
+        .dark-mode .placeholder-gray-400::placeholder {
+            color: #a0aec0;
+        }
+        .dark-mode .ring-gray-300 {
+            --tw-ring-color: #4a5568;
+        }
+        .dark-mode .bg-gray-50 {
+            background-color: #1a202c;
+        }
+        .dark-mode .hover\\:bg-gray-200:hover {
+            background-color: #4a5568;
+        }
+
+        /* Estilos del carrusel */
+        .carousel-container {
+            overflow: hidden;
+        }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel-card {
+            flex: 0 0 auto;
+            width: calc(100% / 3); /* 3 cards on desktop */
+            padding: 0.5rem;
+        }
+        @media (max-width: 768px) {
+            .carousel-card {
+                width: 100%; /* 1 card on mobile */
+            }
+        }
+        /* Estilos para el switch de modo */
+        .toggle-checkbox:checked {
+          @apply: right-0;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modeSwitch = document.getElementById('mode-switch');
+            const html = document.documentElement;
+
+            // Cargar el modo guardado
+            const savedMode = localStorage.getItem('theme');
+            if (savedMode) {
+                html.classList.add(savedMode);
+            }
+
+            modeSwitch.addEventListener('change', () => {
+                if (modeSwitch.checked) {
+                    html.classList.add('dark-mode');
+                    localStorage.setItem('theme', 'dark-mode');
+                } else {
+                    html.classList.remove('dark-mode');
+                    localStorage.setItem('theme', '');
+                }
+            });
+        });
+
+        // Carrusel de servicios
+        let currentCarouselIndex = 0;
+        function updateCarousel(direction) {
+            const track = document.getElementById('carousel-track');
+            const cards = track.querySelectorAll('.carousel-card');
+            const totalCards = cards.length;
+            const cardsPerView = window.innerWidth <= 768 ? 1 : 3;
+
+            currentCarouselIndex += direction;
+
+            if (currentCarouselIndex < 0) {
+                currentCarouselIndex = Math.max(0, totalCards - cardsPerView);
+            } else if (currentCarouselIndex > totalCards - cardsPerView) {
+                currentCarouselIndex = 0;
+            }
+
+            const offset = -currentCarouselIndex * (100 / cardsPerView);
+            track.style.transform = `translateX(${offset}%)`;
+        }
+
+        // Alternar cards de profesionales destacados
+        function selectProfessional(name, specialty, rating, quote) {
+            document.getElementById('featured-prof-name').textContent = name;
+            document.getElementById('featured-prof-specialty').textContent = specialty;
+            document.getElementById('featured-prof-rating').innerHTML = rating;
+            document.getElementById('featured-prof-quote').textContent = quote;
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800 transition-colors duration-300">
+
+    <!-- 1. Navbar (Cabecera) -->
+    <nav class="bg-white shadow-md rounded-b-lg p-4 sticky top-0 z-50">
+        <div class="container mx-auto flex items-center justify-between flex-wrap md:flex-nowrap">
+            <!-- Branding -->
+            <div class="w-full md:w-3/12 flex items-center mb-4 md:mb-0">
+                <img src="https://placehold.co/40x40/4F46E5/ffffff?text=SY" alt="Logo" class="rounded-full">
+                <span class="ml-2 font-semibold text-lg text-indigo-600">Soluciones Ya!</span>
+            </div>
+
+            <!-- Saludo Personalizado -->
+            <div class="w-full md:w-5/12 text-center md:text-left mb-4 md:mb-0">
+                <span class="text-xl font-medium">Bienvenido, Juan Pérez</span>
+            </div>
+
+            <!-- Switch de Modo -->
+            <div class="w-6/12 md:w-2/12 flex items-center justify-center md:justify-end mb-4 md:mb-0">
+                <span class="text-sm mr-2">Modo</span>
+                <label for="mode-switch" class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="mode-switch" class="sr-only peer">
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                </label>
+            </div>
+
+            <!-- Menú de Usuario -->
+            <div class="w-6/12 md:w-2/12 flex items-center justify-end">
+                <div class="relative group">
+                    <button class="flex items-center space-x-2 focus:outline-none">
+                        <img src="https://placehold.co/40x40/A0AEC0/000000?text=JP" alt="Usuario" class="rounded-full">
+                        <svg class="h-4 w-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div class="hidden group-hover:block absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg py-1 z-50">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mi Perfil</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mis Reservas</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Cerrar Sesión</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-4 mt-6">
+
+        <!-- 2. Banner de Bienvenida y Búsqueda -->
+        <section class="bg-indigo-600 text-white rounded-lg p-8 mb-8 shadow-lg">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">¡Hola, Juan! ¿En qué podemos ayudarte hoy?</h1>
+            <div class="relative">
+                <input type="text" placeholder="Busca plomero, limpieza, peluquería..." class="w-full pl-12 pr-4 py-3 rounded-full text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                <svg class="h-6 w-6 text-gray-500 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+        </section>
+
+        <!-- 3. Carrusel de Cards de Servicios -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-2">Servicios disponibles</h2>
+            <p class="text-gray-500 mb-4">Elige el servicio que necesitas para empezar tu solicitud.</p>
+            <div class="relative carousel-container">
+                <div id="carousel-track" class="carousel-track">
+                    <!-- Card 1 -->
+                    <div class="carousel-card">
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+                            <img src="https://placehold.co/400x250/FEE2E2/EF4444?text=Electricidad" alt="Electricidad" class="w-full h-40 object-cover">
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-2">Electricidad</h3>
+                                <button class="w-full bg-indigo-500 text-white font-medium py-2 px-4 rounded-full hover:bg-indigo-600 transition-colors">Ver Servicios</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="carousel-card">
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+                            <img src="https://placehold.co/400x250/D1FAE5/10B981?text=Plomería" alt="Plomería" class="w-full h-40 object-cover">
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-2">Plomería</h3>
+                                <button class="w-full bg-indigo-500 text-white font-medium py-2 px-4 rounded-full hover:bg-indigo-600 transition-colors">Ver Servicios</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="carousel-card">
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+                            <img src="https://placehold.co/400x250/E0E7FF/4338CA?text=Jardinería" alt="Jardinería" class="w-full h-40 object-cover">
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-2">Jardinería</h3>
+                                <button class="w-full bg-indigo-500 text-white font-medium py-2 px-4 rounded-full hover:bg-indigo-600 transition-colors">Ver Servicios</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="carousel-card">
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+                            <img src="https://placehold.co/400x250/FEE2E2/EF4444?text=Limpieza" alt="Limpieza" class="w-full h-40 object-cover">
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-2">Limpieza</h3>
+                                <button class="w-full bg-indigo-500 text-white font-medium py-2 px-4 rounded-full hover:bg-indigo-600 transition-colors">Ver Servicios</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Flechas de Navegación -->
+                <button onclick="updateCarousel(-1)" class="absolute top-1/2 left-0 -translate-y-1/2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 hidden md:block">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <button onclick="updateCarousel(1)" class="absolute top-1/2 right-0 -translate-y-1/2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 hidden md:block">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+            <!-- Paginación -->
+            <div class="flex justify-center mt-4 space-x-2">
+                <span class="h-2 w-2 bg-indigo-500 rounded-full"></span>
+                <span class="h-2 w-2 bg-gray-300 rounded-full"></span>
+                <span class="h-2 w-2 bg-gray-300 rounded-full"></span>
+                <span class="h-2 w-2 bg-gray-300 rounded-full"></span>
+            </div>
+        </section>
+
+        <!-- 4. Sección de Profesionales Destacados -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Profesionales Destacados</h2>
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                <!-- Card Principal (Desktop: 6 columnas, Mobile: 12 columnas) -->
+                <div class="md:col-span-6 bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="flex items-start flex-col sm:flex-row">
+                        <img src="https://placehold.co/120x120/E2E8F0/A0AEC0?text=JM" alt="Juan Morales" class="w-32 h-32 rounded-full object-cover mb-4 sm:mb-0 sm:mr-6">
+                        <div class="flex-grow">
+                            <h3 id="featured-prof-name" class="text-xl font-bold">Juan Morales</h3>
+                            <p id="featured-prof-specialty" class="text-indigo-600 font-medium mb-2">Plomería y Gas</p>
+                            <div id="featured-prof-rating" class="flex items-center text-yellow-400 mb-2">
+                                <span class="text-2xl">⭐⭐⭐⭐⭐</span>
+                            </div>
+                            <blockquote id="featured-prof-quote" class="italic text-gray-500 border-l-4 border-indigo-600 pl-3">"Juan resolvió mi problema de calefón en tiempo récord. ¡Totalmente recomendado!"</blockquote>
+                            <button class="mt-4 bg-indigo-500 text-white font-medium py-2 px-4 rounded-full hover:bg-indigo-600 transition-colors">Más Información</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mini-cards (Desktop: 6 columnas, Mobile: 12 columnas) -->
+                <div class="md:col-span-6 grid grid-cols-1 gap-4">
+                    <!-- Mini-card 1 -->
+                    <div onclick="selectProfessional('Laura Gómez', 'Electricidad', '⭐⭐⭐⭐', 'Laura fue muy profesional y dejó todo impecable.')" class="bg-white rounded-xl shadow-md p-4 flex items-center border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer">
+                        <img src="https://placehold.co/60x60/FEE2E2/EF4444?text=LG" alt="Laura Gómez" class="rounded-full w-16 h-16 object-cover mr-4">
+                        <div>
+                            <h4 class="font-semibold text-lg">Laura Gómez</h4>
+                            <p class="text-gray-500">Electricidad</p>
+                            <span class="text-yellow-400 text-lg">⭐⭐⭐⭐</span>
+                        </div>
+                    </div>
+                    <!-- Mini-card 2 -->
+                    <div onclick="selectProfessional('Pedro Torres', 'Jardinería', '⭐⭐⭐⭐⭐', 'Mi jardín quedó como nuevo. Increíble trabajo de Pedro!')" class="bg-white rounded-xl shadow-md p-4 flex items-center border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer">
+                        <img src="https://placehold.co/60x60/D1FAE5/10B981?text=PT" alt="Pedro Torres" class="rounded-full w-16 h-16 object-cover mr-4">
+                        <div>
+                            <h4 class="font-semibold text-lg">Pedro Torres</h4>
+                            <p class="text-gray-500">Jardinería</p>
+                            <span class="text-yellow-400 text-lg">⭐⭐⭐⭐⭐</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Sección "Tu Historial Reciente" -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-2">🕒 Tus últimas reservas</h2>
+            <p class="text-gray-500 mb-4">Revisa el estado de tus servicios recientes.</p>
+            <div class="relative pl-6 sm:pl-10">
+                <div class="absolute left-0 sm:left-5 top-0 bottom-0 w-1 bg-gray-200 rounded-full"></div>
+                
+                <!-- Ítem del Historial 1 -->
+                <div class="mb-6 flex items-start">
+                    <div class="absolute left-2 sm:left-4 top-1 -translate-x-1/2 w-5 h-5 bg-indigo-500 rounded-full ring-4 ring-white"></div>
+                    <div class="bg-white p-4 rounded-xl shadow-md ml-6 sm:ml-10 w-full border border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <span class="bg-red-100 text-red-600 rounded-full p-2 text-xl mr-3">🔌</span>
+                                <div>
+                                    <h4 class="font-semibold">Reparación Eléctrica</h4>
+                                    <p class="text-sm text-gray-500">Técnico: Laura Gómez</p>
+                                    <p class="text-sm text-gray-500">Fecha: 15 de Octubre, 2023</p>
+                                </div>
+                            </div>
+                            <span class="bg-yellow-100 text-yellow-600 text-xs font-bold px-3 py-1 rounded-full">Pendiente</span>
+                        </div>
+                        <button class="w-full mt-4 bg-gray-100 text-indigo-600 font-medium py-2 rounded-full hover:bg-gray-200 transition-colors">Ver detalle</button>
+                    </div>
+                </div>
+
+                <!-- Ítem del Historial 2 -->
+                <div class="mb-6 flex items-start">
+                    <div class="absolute left-2 sm:left-4 top-1 -translate-x-1/2 w-5 h-5 bg-indigo-500 rounded-full ring-4 ring-white"></div>
+                    <div class="bg-white p-4 rounded-xl shadow-md ml-6 sm:ml-10 w-full border border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <span class="bg-blue-100 text-blue-600 rounded-full p-2 text-xl mr-3">💧</span>
+                                <div>
+                                    <h4 class="font-semibold">Revisión de Cañerías</h4>
+                                    <p class="text-sm text-gray-500">Técnico: Juan Morales</p>
+                                    <p class="text-sm text-gray-500">Fecha: 10 de Octubre, 2023</p>
+                                </div>
+                            </div>
+                            <span class="bg-green-100 text-green-600 text-xs font-bold px-3 py-1 rounded-full">Completado</span>
+                        </div>
+                        <button class="w-full mt-4 bg-gray-100 text-indigo-600 font-medium py-2 rounded-full hover:bg-gray-200 transition-colors">Ver detalle</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white rounded-t-lg shadow-md mt-8 p-6 text-center text-gray-500">
+        <p>© 2023 Soluciones Ya!. Todos los derechos reservados.</p>
+    </footer>
+
+</body>
+</html>
